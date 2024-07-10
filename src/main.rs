@@ -1,49 +1,57 @@
-use std::{io::Write, time::Duration};
+use std::time::Duration;
 
-use enigo::{Enigo, Keyboard, Settings};
+use sysinfo::System;
+
+pub mod antiafk;
 
 fn main() {
-    // Print a message to the console
-    println!("");
-    println!("    _          _   _      _    _____ _  __         ___   _   ___  ");
-    println!("   / \\   _ __ | |_(_)    / \\  |  ___| |/ / __   __/ _ \\ / | / _ \\ ");
-    println!("  / _ \\ | '_ \\| __| |   / _ \\ | |_  | ' /  \\ \\ / / | | || || | | |");
-    println!(" / ___ \\| | | | |_| |  / ___ \\|  _| | . \\   \\ V /| |_| || || |_| |");
-    println!("/_/   \\_\\_| |_|\\__|_| /_/   \\_\\_|   |_|\\_\\   \\_/  \\___(_)_(_)___/ ");
-    println!("");
+    // Start the anti-afk thread
+    antiafk::start_antiafk();
+
+    // Print a multiline ASCII art
+    println!(
+        "
+        .·:'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''':·.
+        : :  ____            _                   _                _ _   _      : :
+        : : / ___| _   _ ___| |_ ___ _ __ ___   | |__   ___  __ _| | |_| |__   : :
+        : : \\___ \\| | | / __| __/ _ \\ '_ ` _ \\  | '_ \\ / _ \\/ _` | | __| '_ \\  : :
+        : :  ___) | |_| \\__ \\ ||  __/ | | | | | | | | |  __/ (_| | | |_| | | | : :
+        : : |____/ \\__, |___/\\__\\___|_| |_| |_| |_| |_|\\___|\\__,_|_|\\__|_| |_| : :
+        : :        |___/           _ _                                         : :
+        : :  _ __ ___   ___  _ __ (_) |_ ___  _ __                             : :
+        : : | '_ ` _ \\ / _ \\| '_ \\| | __/ _ \\| '__|                            : :
+        : : | | | | | | (_) | | | | | || (_) | |                               : :
+        : : |_| |_| |_|\\___/|_| |_|_|\\__\\___/|_|                               : :
+        '·:....................................................................:·'
+    "
+    );
 
     const SLEEP_SECONDS: u64 = 1;
-    let mut enigo = Enigo::new(&Settings::default()).unwrap();
-    let mut counter = 0;
-
-    println!(
-        "This program will simulate a key press every {} minutes to prevent AFK.",
-        SLEEP_SECONDS / 60
-    );
-    println!("");
+    let mut system = System::new_all();
 
     loop {
-        let current_time = chrono::Local::now().time().format("%H:%M:%S").to_string();
+        // Update the system information
+        system.refresh_all();
 
-        // Simulate a key release
-        match enigo.key(enigo::Key::LWin, enigo::Direction::Release) {
-            Ok(_) => (),
-            Err(e) => eprintln!("\r[{}] Error releasing key: {}\x1B[K", current_time, e),
-        }
+        // Print the system information
+        println!("Processes running: {}", system.processes().len());
 
-        // Print info
-        print!(
-            "\rTriggered anti afk {} times (Last trigger: {})\x1B[K",
-            counter, current_time
-        );
-        match std::io::stdout().flush() {
-            Ok(_) => (),
-            Err(e) => eprintln!("[{}] Error flushing stdout: {}", current_time, e),
-        }
+        println!("CPU:");
+        println!("  - CPU Usage: {}%", system.global_cpu_info().cpu_usage());
+        println!("  - CPU Frequency: {} MHz", system.global_cpu_info().frequency());
+        println!("  - Physical Cores: {}", system.physical_core_count().unwrap_or(0));
 
-        counter += 1;
+        println!("Memory:");
+        println!("  - Total Memory: {}MB", system.total_memory() / 1000 / 1000);
+        println!("  - Used Memory: {}MB", system.used_memory() / 1000 / 1000);
+        println!("  - Free Memory: {}MB", system.free_memory() / 1000 / 1000);
 
-        // Sleep before next key press
+        println!("Swap:");
+        println!("  - Total Swap: {}MB", system.total_swap() / 1000 / 1000);
+        println!("  - Used Swap: {}MB", system.used_swap() / 1000 / 1000);
+        println!("  - Free Swap: {}MB", system.free_swap() / 1000 / 1000);
+
+        // Sleep for 1 second
         std::thread::sleep(Duration::from_secs(SLEEP_SECONDS));
     }
 }
