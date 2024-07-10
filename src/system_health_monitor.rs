@@ -29,9 +29,9 @@ pub fn start_health_monitor() {
 
         lines.push(format!("CPU:"));
         lines.push(format!("  - Physical Cores amount: {}", system.physical_core_count().unwrap_or(0)));
-        lines.push(format!("  - Total CPU Usage: {}%", system.global_cpu_info().cpu_usage()));
+        lines.push(format!("  - Total CPU Usage: {}%", system.global_cpu_info().cpu_usage().round()));
         for (i, cpu) in system.cpus().iter().enumerate() {
-            lines.push(format!("  - CPU {}: {}%", i, cpu.cpu_usage()));
+            lines.push(format!("  - CPU {}: {}%", i, cpu.cpu_usage().round()));
         }
 
         lines.push(format!("Memory:"));
