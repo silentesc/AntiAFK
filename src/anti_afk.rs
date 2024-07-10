@@ -32,12 +32,12 @@ pub fn start_anti_afk() {
         // Simulate a key release
         match enigo.key(enigo::Key::LWin, enigo::Direction::Release) {
             Ok(_) => (),
-            Err(e) => eprintln!("\r[{}] Error releasing key: {}\x1B[K", current_time, e),
+            Err(e) => eprintln!("\r[{}] Error releasing key: {}", current_time, e),
         }
 
         // Print info
         print!(
-            "\rTriggered anti afk {} times (Last trigger: {})\x1B[K",
+            "\rTriggered anti afk {} times (Last trigger: {})",
             counter, current_time
         );
         match std::io::stdout().flush() {
