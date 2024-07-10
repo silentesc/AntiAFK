@@ -8,24 +8,6 @@ use std::time::Duration;
 use sysinfo::System;
 
 pub fn start_health_monitor() {
-    // Print a multiline ASCII art
-    println!(
-        "
-        .·:'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''':·.
-        : :  ____            _                   _                _ _   _      : :
-        : : / ___| _   _ ___| |_ ___ _ __ ___   | |__   ___  __ _| | |_| |__   : :
-        : : \\___ \\| | | / __| __/ _ \\ '_ ` _ \\  | '_ \\ / _ \\/ _` | | __| '_ \\  : :
-        : :  ___) | |_| \\__ \\ ||  __/ | | | | | | | | |  __/ (_| | | |_| | | | : :
-        : : |____/ \\__, |___/\\__\\___|_| |_| |_| |_| |_|\\___|\\__,_|_|\\__|_| |_| : :
-        : :        |___/           _ _                                         : :
-        : :  _ __ ___   ___  _ __ (_) |_ ___  _ __                             : :
-        : : | '_ ` _ \\ / _ \\| '_ \\| | __/ _ \\| '__|                            : :
-        : : | | | | | | (_) | | | | | || (_) | |                               : :
-        : : |_| |_| |_|\\___/|_| |_|_|\\__\\___/|_|                               : :
-        '·:....................................................................:·'
-    "
-    );
-
     const SLEEP_SECONDS: u64 = 3;
     let mut system = System::new_all();
 
@@ -61,6 +43,8 @@ pub fn start_health_monitor() {
         lines.push(format!("  - Total Swap: {}MB", system.total_swap() / 1000 / 1000));
         lines.push(format!("  - Used Swap: {}MB", system.used_swap() / 1000 / 1000));
         lines.push(format!("  - Free Swap: {}MB", system.free_swap() / 1000 / 1000));
+
+        // 
 
         // Print each line with a delay in between
         for (i, line) in lines.iter().enumerate() {
