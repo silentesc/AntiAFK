@@ -16,7 +16,7 @@ pub fn start_anti_afk() {
     "
     );
 
-    const SLEEP_SECONDS: u64 = 1;
+    const SLEEP_SECONDS: u64 = 60 * 3;
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
     let mut counter = 1;
 
