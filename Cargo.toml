@@ -2,9 +2,3 @@
 name = "anti_afk"
 version = "0.1.0"
 edition = "2021"
-
-[dependencies]
-windows-sys = {version = "0.52.0", features = [
-    "Win32_System_Threading",
-    "Win32_System_Power"
-]}
