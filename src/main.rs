@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{io::Write, time::Duration};
 
 use enigo::{Enigo, Keyboard, Settings};
 
@@ -11,16 +11,33 @@ fn main() {
     println!(" / ___ \\| | | | |_| |  / ___ \\|  _| | . \\   \\ V /| |_| || || |_| |");
     println!("/_/   \\_\\_| |_|\\__|_| /_/   \\_\\_|   |_|\\_\\   \\_/  \\___(_)_(_)___/ ");
     println!("");
-
+    
+    const SLEEP_SECONDS: u64 = 1;
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
+    let mut counter = 0;
+
+    println!("This program will simulate a key press every {} minutes to prevent AFK.", SLEEP_SECONDS / 60);
+    println!("");
     
     loop {
-        // Simulate a key press
-        enigo.key(enigo::Key::LWin, enigo::Direction::Click).unwrap();
-        std::thread::sleep(Duration::from_millis(100));
-        enigo.key(enigo::Key::LWin, enigo::Direction::Click).unwrap();
+        let current_time = chrono::Local::now().time().format("%H:%M:%S").to_string();
 
-        // Sleep for 3 seconds
-        std::thread::sleep(Duration::from_secs(5));
+        // Simulate a key release
+        match enigo.key(enigo::Key::LWin, enigo::Direction::Release) {
+            Ok(_) => (),
+            Err(e) => eprintln!("\r[{}] Error releasing key: {}\x1B[K", current_time, e),
+        }
+
+        // Print info
+        print!("\rTriggered anti afk {} times (Last trigger: {})\x1B[K", counter, current_time);
+        match std::io::stdout().flush() {
+            Ok(_) => (),
+            Err(e) => eprintln!("[{}] Error flushing stdout: {}", current_time, e),
+        }
+
+        counter += 1;
+
+        // Sleep before next key press
+        std::thread::sleep(Duration::from_secs(SLEEP_SECONDS));
     }
 }
