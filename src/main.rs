@@ -1,3 +1,7 @@
+use std::time::Duration;
+
+use enigo::{Enigo, Keyboard, Settings};
+
 fn main() {
     // Print a message to the console
     println!("");
@@ -7,5 +11,16 @@ fn main() {
     println!(" / ___ \\| | | | |_| |  / ___ \\|  _| | . \\   \\ V /| |_| || || |_| |");
     println!("/_/   \\_\\_| |_|\\__|_| /_/   \\_\\_|   |_|\\_\\   \\_/  \\___(_)_(_)___/ ");
     println!("");
-    println!("System is prevented from going idle. Press Enter to exit.");
+
+    let mut enigo = Enigo::new(&Settings::default()).unwrap();
+    
+    loop {
+        // Simulate a key press
+        enigo.key(enigo::Key::LWin, enigo::Direction::Click).unwrap();
+        std::thread::sleep(Duration::from_millis(100));
+        enigo.key(enigo::Key::LWin, enigo::Direction::Click).unwrap();
+
+        // Sleep for 3 seconds
+        std::thread::sleep(Duration::from_secs(5));
+    }
 }
