@@ -4,5 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+crossterm = "0.27.0"
+crossterm_style = "0.5.2"
 enigo = "0.2.1"
 sysinfo = "0.30.13"
