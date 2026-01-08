@@ -1,8 +1,8 @@
 [package]
 name = "anti_afk"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
-chrono = "0.4.38"
-enigo = "0.2.1"
+chrono = "0.4.42"
+enigo = "0.6.1"
