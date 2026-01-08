@@ -30,7 +30,7 @@ pub fn start_anti_afk() {
         let current_time = chrono::Local::now().time().format("%H:%M:%S").to_string();
 
         // Simulate a key release
-        match enigo.key(enigo::Key::LWin, enigo::Direction::Release) {
+        match enigo.key(enigo::Key::LMenu, enigo::Direction::Release) {
             Ok(_) => (),
             Err(e) => eprintln!("\r[{}] Error releasing key: {}", current_time, e),
         }
